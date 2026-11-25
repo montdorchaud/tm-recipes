@@ -1,0 +1,16 @@
+---
+layout: base
+title: Recipes
+---
+<h1>{{ site.title }}</h1>
+<p class="meta">{{ site.recipes | size }} recipes. Open one and tap “Copy link for Cookidoo”.</p>
+<ul class="index">
+{%- assign sorted = site.recipes | sort: "title" -%}
+{%- for r in sorted %}
+  <li>
+    <a href="{{ r.url | relative_url }}">{{ r.title }}</a>
+    <span class="note">{{ r.servings }} servings{% if r.total_minutes %}, {{ r.total_minutes }} min{% endif %}{% if r.tags %}, {{ r.tags | join: ", " }}{% endif %}</span>
+  </li>
+{%- endfor %}
+</ul>
+{% if site.recipes.size == 0 %}<p>No recipes yet. Add a file to the <code>_recipes</code> folder to get started.</p>{% endif %}
