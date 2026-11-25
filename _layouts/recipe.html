@@ -1,0 +1,85 @@
+---
+layout: base
+---
+{%- comment -%} Build plain-text steps once; used for both the JSON-LD and the page. {%- endcomment -%}
+{%- assign step_texts = "" | split: "" -%}
+{%- for step in page.steps -%}
+  {%- capture settings -%}{% include settings.html step=step %}{%- endcapture -%}
+  {%- capture line -%}{{ step.text | strip }}{% if settings != "" %} {{ settings }}{% endif %}.{%- endcapture -%}
+  {%- assign step_texts = step_texts | push: line -%}
+{%- endfor -%}
+{%- assign ing_texts = "" | split: "" -%}
+{%- for i in page.ingredients -%}
+  {%- capture line -%}{% if i.amount %}{{ i.amount }} {% endif %}{% if i.unit and i.unit != "" %}{{ i.unit }} {% endif %}{{ i.name }}{%- endcapture -%}
+  {%- assign ing_texts = ing_texts | push: line -%}
+{%- endfor -%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": {{ page.title | jsonify }},
+  "description": {{ page.description | default: "" | jsonify }},
+  {%- if page.image %}
+  "image": [{{ page.image | jsonify }}],
+  {%- endif %}
+  "recipeYield": "{{ page.servings }}",
+  {%- if page.prep_minutes %}
+  "prepTime": "PT{{ page.prep_minutes }}M",
+  {%- endif %}
+  {%- if page.total_minutes %}
+  "totalTime": "PT{{ page.total_minutes }}M",
+  {%- endif %}
+  "keywords": {{ page.tags | join: ", " | jsonify }},
+  "recipeIngredient": {{ ing_texts | jsonify }},
+  "recipeInstructions": [
+    {%- for t in step_texts %}
+    { "@type": "HowToStep", "text": {{ t | jsonify }} }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ]
+}
+</script>
+
+<p class="meta"><a href="{{ '/' | relative_url }}">All recipes</a></p>
+<h1>{{ page.title }}</h1>
+{% if page.description %}<p>{{ page.description }}</p>{% endif %}
+<p class="meta">
+  {% if site.tm_lang == "de" %}{{ page.servings }} Portionen{% else %}{{ page.servings }} servings{% endif %}
+  {%- if page.total_minutes %}, {{ page.total_minutes }} min{% endif %}
+</p>
+{% if page.image %}<img class="photo" src="{{ page.image }}" alt="{{ page.title | escape }}">{% endif %}
+
+<h2>{% if site.tm_lang == "de" %}Zutaten{% else %}Ingredients{% endif %}</h2>
+<div class="card">
+<ul class="ingredients">
+{%- for i in page.ingredients %}
+  <li><span class="qty">{% if i.amount %}{{ i.amount }} {% endif %}{% if i.unit and i.unit != "" %}{{ i.unit }}{% endif %}</span> {{ i.name }}</li>
+{%- endfor %}
+</ul>
+</div>
+
+<h2>{% if site.tm_lang == "de" %}Zubereitung{% else %}Method{% endif %}</h2>
+<ol class="steps">
+{%- for step in page.steps %}
+  {%- capture settings -%}{% include settings.html step=step %}{%- endcapture %}
+  <li>{{ step.text | strip }}{% if settings != "" %} <span class="tm">{{ settings }}</span>{% endif %}.</li>
+{%- endfor %}
+</ol>
+
+{% if page.notes %}<h2>{% if site.tm_lang == "de" %}Tipps{% else %}Notes{% endif %}</h2><p>{{ page.notes }}</p>{% endif %}
+
+<div class="actions">
+  <button type="button" id="copy">Copy link for Cookidoo</button>
+  <span class="note" id="copied" aria-live="polite"></span>
+</div>
+<script>
+  document.getElementById("copy").addEventListener("click", async () => {
+    const msg = document.getElementById("copied");
+    try {
+      await navigator.clipboard.writeText(location.href);
+      msg.textContent = "Link copied. Paste it into Cookidoo’s Import recipe field.";
+    } catch (e) {
+      msg.textContent = "Copy failed. Copy the address from the browser bar instead.";
+    }
+  });
+</script>
