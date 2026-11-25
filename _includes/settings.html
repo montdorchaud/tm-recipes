@@ -1,0 +1,34 @@
+{%- comment -%}
+  Renders Thermomix settings for one step, e.g. "20 min/100°C/reverse/speed 1".
+  Usage: {% include settings.html step=step %}
+{%- endcomment -%}
+{%- assign s = include.step -%}
+{%- if site.tm_lang == "de" -%}
+  {%- assign w_min = "Min." -%}{%- assign w_sec = "Sek." -%}{%- assign w_speed = "Stufe" -%}
+  {%- assign w_rev = "Linkslauf" -%}{%- assign w_soft = "Sanftrührstufe" -%}
+{%- else -%}
+  {%- assign w_min = "min" -%}{%- assign w_sec = "sec" -%}{%- assign w_speed = "speed" -%}
+  {%- assign w_rev = "reverse" -%}{%- assign w_soft = "speed soft" -%}
+{%- endif -%}
+{%- assign parts = "" | split: "" -%}
+{%- if s.time_s -%}
+  {%- assign m = s.time_s | divided_by: 60 -%}
+  {%- assign sec = s.time_s | modulo: 60 -%}
+  {%- if m > 0 and sec > 0 -%}{%- capture t -%}{{ m }} {{ w_min }} {{ sec }} {{ w_sec }}{%- endcapture -%}
+  {%- elsif m > 0 -%}{%- capture t -%}{{ m }} {{ w_min }}{%- endcapture -%}
+  {%- else -%}{%- capture t -%}{{ sec }} {{ w_sec }}{%- endcapture -%}
+  {%- endif -%}
+  {%- assign parts = parts | push: t -%}
+{%- endif -%}
+{%- if s.temp -%}
+  {%- assign temp = s.temp | downcase -%}
+  {%- if temp == "varoma" -%}{%- assign t = "Varoma" -%}{%- else -%}{%- capture t -%}{{ s.temp }}°C{%- endcapture -%}{%- endif -%}
+  {%- assign parts = parts | push: t -%}
+{%- endif -%}
+{%- if s.reverse -%}{%- assign parts = parts | push: w_rev -%}{%- endif -%}
+{%- if s.speed -%}
+  {%- assign sp = s.speed | downcase -%}
+  {%- if sp == "soft" -%}{%- assign t = w_soft -%}{%- else -%}{%- capture t -%}{{ w_speed }} {{ s.speed }}{%- endcapture -%}{%- endif -%}
+  {%- assign parts = parts | push: t -%}
+{%- endif -%}
+{{- parts | join: "/" -}}
