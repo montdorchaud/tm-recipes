@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="{% if site.tm_lang == 'de' %}de{% else %}en{% endif %}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+{% if page.description %}<meta name="description" content="{{ page.description | escape }}">{% endif %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F3F6F5; --surface: #FFFFFF; --ink: #1B2226; --muted: #5C686E;
+  --herb: #24483E; --chip-bg: #DCEFE5; --chip-ink: #1D4A3B; --rule: #D5DDDA;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101614; --surface: #18201D; --ink: #E7ECEA; --muted: #9AA8A3;
+    --herb: #8FD1B4; --chip-bg: #1F3A31; --chip-ink: #BFE8D4; --rule: #2B3632;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 1.125rem; line-height: 1.55;
+}
+main { max-width: 40rem; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+a { color: var(--herb); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--herb); outline-offset: 2px; }
+h1 { font-size: 2.1rem; line-height: 1.15; margin: 0.5rem 0 0.5rem; color: var(--herb); }
+h2 { font-size: 1.25rem; margin: 2rem 0 0.75rem; }
+.meta { color: var(--muted); margin: 0 0 1rem; }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; padding: 1rem 1.25rem; }
+ul.ingredients { list-style: none; padding: 0; margin: 0; }
+ul.ingredients li { padding: 0.45rem 0; border-bottom: 1px solid var(--rule); }
+ul.ingredients li:last-child { border-bottom: 0; }
+.qty { font-weight: 700; font-variant-numeric: tabular-nums; }
+ol.steps { padding-left: 1.5rem; margin: 0; }
+ol.steps li { margin-bottom: 1rem; padding-left: 0.25rem; }
+.tm {
+  display: inline-block; background: var(--chip-bg); color: var(--chip-ink);
+  font-weight: 700; font-variant-numeric: tabular-nums;
+  padding: 0.05rem 0.5rem; border-radius: 6px; white-space: nowrap;
+}
+.actions { display: flex; gap: 0.75rem; align-items: center; margin: 1rem 0 0; flex-wrap: wrap; }
+button {
+  font: inherit; font-size: 1rem; font-weight: 700; cursor: pointer;
+  background: var(--herb); color: var(--surface); border: 0; border-radius: 10px; padding: 0.6rem 1rem;
+}
+.note { color: var(--muted); font-size: 0.95rem; }
+img.photo { width: 100%; height: auto; border-radius: 14px; margin: 0.5rem 0 1rem; }
+ul.index { list-style: none; padding: 0; }
+ul.index li { padding: 0.75rem 0; border-bottom: 1px solid var(--rule); }
+ul.index a { font-weight: 700; text-decoration: none; }
+ul.index .note { display: block; }
+</style>
+</head>
+<body>
+<main>
+{{ content }}
+</main>
+</body>
+</html>
