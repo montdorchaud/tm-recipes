@@ -1,10 +1,10 @@
 # Site settings
-title: My Thermomix recipes
+title: Fookidoo
 description: Personal recipes for the Thermomix TM7
 
 # For a project site (yourname.github.io/REPO-NAME) set baseurl to "/REPO-NAME".
 # For a user site (repo named yourname.github.io) leave it empty: ""
-baseurl: "/tm-recipes"
+baseurl: "/fookidoo"
 
 # Language of the Thermomix settings text: "en" (5 sec/speed 5)
 # or "de" (5 Sek./Stufe 5). Match the language of your Cookidoo account.
